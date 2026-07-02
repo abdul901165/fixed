@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Panou Control |     
+{% if user and user["gender"] == "F" %}
+        Profa Eficientă
+    {% else %}
+        Proful Eficient
+    {% endif %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block main %}
+
+<!-- BACKGROUND -->
+<div class="min-h-0 h-[calc(100dvh-80px)] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-6 overflow-hidden">
+    <div class="w-full max-w-[1850px] mx-auto h-full bg-white border border-slate-200 rounded-[2rem] shadow-2xl p-3 flex gap-3 overflow-hidden">
+
+        <!-- SIDEBAR STANGA (CARD) -->
+        <div class="w-72 bg-slate-950 border border-slate-800 rounded-3xl p-4 flex flex-col shadow-xl">
+
+            <h2 class="text-white text-lg font-bold mb-4">
+                <span data-i18n="idx_conversations">Conversații</span>
+            </h2>
+
+            <div class="space-y-2 overflow-y-auto">
+                {% for conv in conversations %}
+                    <a href="/mode1/{{ conv['id'] }}"
+                    class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl">
+
+                        {% if conv["title"] == "Conversație nouă" %}
+                            <span data-i18n="new_chat">Conversație nouă</span>
+                        {% else %}
+                            {{ conv["title"] }}
+                        {% endif %}
+
+                    </a>
+                {% endfor %}
+            </div>
+
+<div class="mt-auto pt-4 border-t border-slate-800">
+
+    <a
+        href="/account"
+        class="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 text-slate-900 hover:bg-slate-400 transition"
+    >
+
+        <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-slate-950 font-bold">
+            A
+        </div>
+
+        <div class="flex flex-col">
+            <span class="text-sm font-semibold text-slate-950" data-i18n="idx_account">Cont</span>
+
+            <span class="text-xs text-slate-950" data-i18n="idx_manage">Gestioneaza</span>
+        </div>
+
+    </a>
+
+</div>
+
+
+
+        </div>
+
+
+        <!-- CENTRU (CARD PRINCIPAL) -->
+        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-3xl p-6 flex flex-col shadow-xl h-full min-h-0 overflow-hidden">
+
+            <!-- HEADER -->
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-white" data-i18n="idx_continue">Continuă conversația</h1>
+                <p class="text-slate-400">
+                    <span data-i18n="idx_active_mode">mod activ:</span> {{ mod }}
+                </p>
+            </div>
+
+            <div class="flex-1 bg-white rounded-3xl border border-slate-700 p-6 flex flex-col shadow-inner min-h-0 overflow-hidden">
+                <!-- CHAT AREA -->
+                <div id="chat" class="flex-1 overflow-y-auto space-y-4 pr-2 min-h-0 mb-2">
+
+
+                    {% for message in messages %}
+
+                        {% if message["role"] == "user" %}
+
+                            <div class="bg-cyan-100 text-slate-900 p-4 rounded-2xl hover:shadow-md transition-shadow w-fit max-w-xl ml-auto border border-cyan-200">
+                                {{ message["content"]|safe }}
+                            </div>
+
+                        {% else %}
+
+                            <div class="bg-slate-100 text-slate-900 p-5 rounded-2xl hover:shadow-md transition-shadow max-w-3xl border border-slate-200">
+                                {{ message["content"]|safe }}
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- INPUT -->
+                <form action="/create_mode1" method="post" class="flex gap-3">
+
+                    <textarea
+                        class="flex-1 text-slate-900 border border-slate-300 rounded-2xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        rows="1"
+                        data-i18n-placeholder="idx_write_req" placeholder="Scrie cererea ta..."
+                    ></textarea>
+
+                    <button
+                        class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold transition px-8 rounded-2xl"
+                        type="submit"
+                     data-i18n="idx_send">Trimite</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- DREAPTA -->
+        <div class="w-80 flex flex-col gap-3">
+
+            <!-- FIȘIERE -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 shadow-xl h-[calc(100vh-430px)] overflow-y-auto">
+                <h2 class="text-white font-bold mb-3" data-i18n="idx_gen_files">Fișiere generate</h2>
+
+                <ul class="space-y-2 text-slate-300 text-sm">
+                    <li class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl">2024-2025 Proba E</li>
+                    <li class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl">BAC Simulare 1</li>
+                    <li class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl" data-i18n="idx_tests_trig">Teste trigonometrie</li>
+                </ul>
+            </div>
+
+
+            <!-- EXERCIȚII SALVATE -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 shadow-xl h-[calc(100vh-670px)] overflow-y-auto">
+                <h2 class="text-white font-bold mb-3" data-i18n="idx_saved_ex">Exerciții salvate</h2>
+
+                <div class="text-slate-300 text-sm space-y-2">
+
+                    <div class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl" data-i18n="idx_cls9_rad">Clasa IX - radicali</div>
+
+                    <div class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl" data-i18n="idx_trig_base">Trigonometrie - baze</div>
+
+                    <div class="block bg-slate-50 hover:bg-slate-400 text-slate-950 px-3 py-2 rounded-xl" data-i18n="idx_equations">Ecuații</div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TIP -->
+            <div class="text-xs text-slate-500 px-1" data-i18n="idx_tip">Tip: apasa pe exercitiu pentru a il lipi in conversatie, si apasa pe document pentru a il descarca</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

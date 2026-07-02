@@ -1,0 +1,317 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Generator BAC | 
+    {% if user and user["gender"] == "F" %}
+        Profa Eficientă
+    {% else %}
+        Proful Eficient
+    {% endif %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block main %}
+
+<!-- BACKGROUND -->
+<div class="min-h-0 h-[calc(100dvh-80px)] bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-6 overflow-hidden">
+            <!-- WRAPPER -->
+    <div class="w-full max-w-[1850px] mx-auto h-full bg-white border border-slate-200 rounded-[2rem] shadow-2xl p-3 flex gap-3 overflow-hidden">
+
+        <!-- STANGA - CONVERSATII -->
+        <div class="w-72 bg-slate-950 border border-slate-800 rounded-3xl p-4 flex flex-col shadow-xl">
+
+            <h2 class="text-white text-lg font-bold mb-4" data-i18n="conversations_title">
+                Conversații
+            </h2>
+
+            <div class="space-y-2 overflow-y-auto">
+                {% for conv in conversations %}
+                    <a href="/mode5/{{ conv['id'] }}"
+                    class="block bg-slate-50 hover:bg-slate-400 transition text-slate-950 px-3 py-2 rounded-xl">
+
+                        {% if conv["title"] == "Conversație nouă" %}
+                            <span data-i18n="new_chat">Conversație nouă</span>
+                        {% else %}
+                            {{ conv["title"] }}
+                        {% endif %}
+
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- ACCOUNT -->
+            <div class="mt-auto pt-4 border-t border-slate-800">
+
+                <a
+                    href="/account"
+                    class="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 text-slate-900 hover:bg-slate-400 transition"
+                >
+
+                    <div class="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-slate-950 font-bold">
+                        A
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm font-semibold text-slate-950" data-i18n="idx_account">Cont</span>
+
+                        <span class="text-xs text-slate-950" data-i18n="idx_manage">Gestioneaza</span>
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- CENTRU -->
+        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-3xl p-6 flex flex-col shadow-xl h-full min-h-0 overflow-hidden">
+
+            <!-- HEADER -->
+            <div class="mb-6 flex items-start justify-between gap-4">
+
+                <div>
+                    <h1 class="text-3xl font-bold text-white" data-i18n="m5_header">Generator BAC AI</h1>
+
+                    <p class="text-slate-400 mt-1" data-i18n="m5_sub">Creează variante BAC personalizate instant</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 min-w-[280px]">
+                    <div class="text-slate-400 text-sm" data-i18n="m5_bac_active">BAC activ:</div>
+
+                    <div class="text-white font-bold text-lg">
+                        {{ bac }} M_Tehnologic
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTENT -->
+            <div class="flex-1 bg-white rounded-3xl border border-slate-700 p-6 flex flex-col shadow-inner min-h-0 overflow-hidden">
+
+                <!-- INFO -->
+                <div class="grid grid-cols-3 gap-4 mb-6">
+
+                    <div class="bg-slate-100 text-slate-900 rounded-2xl hover:shadow-md transition-shadow p-4 border border-slate-200">
+                        <p class="text-xs uppercase tracking-wide text-slate-500 mb-1" data-i18n="m5_accent">Accent</p>
+
+                        <p class="font-semibold text-slate-900" data-i18n="m5_trig">Trigonometrie</p>
+                    </div>
+
+                    <div class="bg-slate-100 text-slate-900 rounded-2xl hover:shadow-md transition-shadow p-4 border border-slate-200">
+                        <p class="text-xs uppercase tracking-wide text-slate-500 mb-1" data-i18n="m5_lessons_incl">Lecții incluse</p>
+
+                        <p class="font-semibold text-slate-900" data-i18n="m5_func_matr_int">Funcții, Matrici, Integrale</p>
+                    </div>
+
+                    <div class="bg-slate-100 text-slate-900 rounded-2xl hover:shadow-md transition-shadow p-4 border border-slate-200">
+                        <p class="text-xs uppercase tracking-wide text-slate-500 mb-1" data-i18n="m5_lessons_omit">Lecții omise</p>
+
+                        <p class="font-semibold text-slate-900" data-i18n="m5_geom_vect">Geometrie vectorială</p>
+                    </div>
+
+                </div>
+
+                <!-- CHAT / OUTPUT -->
+                <div id="chat" class="flex-1 overflow-y-auto space-y-4 pr-2 min-h-0 mb-2">
+
+                    {% for message in messages %}
+
+                        {% if message["role"] == "user" %}
+
+                            <div class="bg-cyan-100 text-slate-900 p-4 rounded-2xl hover:shadow-md transition-shadow w-fit max-w-xl ml-auto border border-cyan-200">
+                                {{ message["content"]|safe }}
+                            </div>
+
+                        {% else %}
+
+                            <div class="bg-slate-100 text-slate-900 p-5 rounded-2xl hover:shadow-md transition-shadow max-w-3xl border border-slate-200">
+
+                                <!-- Copy button -->
+
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-bold text-slate-900">
+                                        <span data-i18n="m5_variant_gen">
+                                            Variantă BAC generată
+                                        </span>
+                                    </h3>
+                                </div>
+
+                                <div class="text-slate-700 text-sm leading-relaxed whitespace-pre-line msg-content-container">
+                                    {{ message["content"]|safe }}
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- QUICK ACTIONS -->
+                <div class="flex flex-wrap justify-end gap-2 mt-auto mb-3 flex-shrink-0">
+
+                    <button
+                        class="bg-slate-800 hover:bg-slate-700 transition text-white font-bold py-2 px-4 rounded-xl text-sm"
+                     data-i18n="m5_solve_test">Rezolvare test</button>
+
+                    <button
+                        class="bg-slate-800 hover:bg-slate-700 transition text-white font-bold py-2 px-4 rounded-xl text-sm"
+                     data-i18n="m5_gen_similar">Generează similare</button>
+
+                    <button
+                        class="bg-slate-800 hover:bg-slate-700 transition text-white font-bold py-2 px-4 rounded-xl text-sm"
+                     data-i18n="m5_gen_row2">Generează rand 2</button>
+
+                    <form action="/mode5/{{ conversation_id }}"  method="post">
+
+                        <button
+                            type="submit"
+                            class="bg-cyan-500 hover:bg-cyan-400 transition text-slate-950 font-bold py-2 px-4 rounded-xl text-sm"
+                         data-i18n="m5_gen_alt">Generează alt BAC</button>
+
+                    </form>
+
+                </div>
+
+                <!-- INPUT -->
+                <form action="/mode5/{{ conversation_id }}" method="post" class="flex gap-3">
+
+                    <textarea
+                        name="prompt"
+                        rows="1"
+                        data-i18n-placeholder="m5_gen_ph" placeholder="Ex: Generează 10 exerciții BAC dificultate mare fără integrale..."
+                        class="flex-1 text-slate-950 border border-slate-300 rounded-2xl p-4 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    ></textarea>
+
+                    <button
+                        type="submit"
+                        class="bg-cyan-500 hover:bg-cyan-400 transition text-slate-950 font-bold px-8 rounded-2xl"
+                     data-i18n="m5_generate">Generează</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- DREAPTA -->
+        <div class="w-80 flex flex-col gap-3">
+
+            <!-- SELECTEAZA LECTII -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 shadow-xl h-[calc(100vh-430px)] overflow-y-auto">
+
+                <h2 class="text-white font-bold mb-4" data-i18n="m5_select_lessons">Selectează lecții</h2>
+
+                <div class="space-y-5 text-sm">
+
+                    <!-- IX -->
+                    <div>
+
+                        <h3 class="text-cyan-400 font-bold mb-2" data-i18n="grade_9">Clasa a IX-a</h3>
+
+                        <div class="space-y-2">
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_radicals">Radicali</label>
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_powers">Puteri</label>
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_fractions">Fracții</label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- X -->
+                    <div>
+
+                        <h3 class="text-cyan-400 font-bold mb-2" data-i18n="grade_10">Clasa a X-a</h3>
+
+                        <div class="space-y-2">
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_matrices">Matrici</label>
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_trig">Trigonometrie</label>
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_complex">Numere complexe</label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- XI -->
+                    <div>
+
+                        <h3 class="text-cyan-400 font-bold mb-2" data-i18n="grade_11">Clasa a XI-a</h3>
+
+                        <div class="space-y-2">
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_limits">Limite</label>
+
+                            <label class="flex items-center gap-2 text-slate-300">
+                                <input type="checkbox" data-i18n="m_deriv">Derivate</label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FISIERE -->
+            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-4 shadow-xl h-[calc(100vh-670px)] overflow-y-auto">
+
+                <h2 class="text-white font-bold mb-3" data-i18n="m5_download_bac">Descarcă variante BAC</h2>
+
+                <div class="space-y-2 text-sm">
+
+                    <a class="block bg-slate-50 hover:bg-slate-400 transition text-slate-950 px-3 py-2 rounded-xl">
+                        2024 - Proba E
+                    </a>
+
+                    <a class="block bg-slate-50 hover:bg-slate-400 transition text-slate-950 px-3 py-2 rounded-xl">
+                        <span data-i18n="m5_bac_sim">Simulare BAC</span> 2025
+                    </a>
+
+                    <a class="block bg-slate-50 hover:bg-slate-400 transition text-slate-950 px-3 py-2 rounded-xl">
+                        Test trigonometrie
+                    </a>
+
+                </div>
+
+
+
+            </div>
+            <!-- BUTTONS -->
+                <div class="flex flex-col gap-2">
+
+                    <button onclick="window.location.href='/menu'"
+                        class="bg-cyan-500 hover:bg-cyan-400 transition text-slate-950 font-bold py-3 rounded-xl"
+                     data-i18n="change_mode">Schimbă mod</button>
+
+                    <button onclick="window.location.href='/create_mode5'"
+                        class="bg-slate-800 hover:bg-slate-700 transition text-white font-bold py-3 rounded-xl"
+                     data-i18n="new_chat">Conversație nouă</button>
+
+                </div>
+
+            <!-- TIP -->
+            <div class="text-xs text-slate-500 px-1" data-i18n="m5_tip">Tip: apasă pe o lecție pentru a o include în generarea variantei BAC.</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
